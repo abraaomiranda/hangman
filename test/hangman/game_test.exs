@@ -13,26 +13,24 @@ defmodule Hangman.GameTest do
 
   test "make_move/2 do not change game_state if the game is won or lost" do
     game = Game.new_game() |> Map.put(:game_state, :lost)
-    {^game, _} = Game.make_move(game, "wtv")
+    ^game = Game.make_move(game, "wtv")
   end
 
   test "first occurence of letter no already used" do
-    game = Game.new_game()
-    {game, _tally} = Game.make_move(game, "x")
+    game = Game.new_game() |> Game.make_move("x")
     assert game.game_state != :already_used
   end
 
   test "second occurence of letter no already used" do
-    game = Game.new_game()
-    {game, _tally} = Game.make_move(game, "x")
+    game = Game.new_game() |> Game.make_move("x")
     assert game.game_state != :already_used
-    {game, _tally} = Game.make_move(game, "x")
+
+    game = Game.make_move(game, "x")
     assert game.game_state == :already_used
   end
 
   test "a good guess is recognized" do
-    game = Game.new_game("xablau")
-    {game, _tally} = Game.make_move(game, "x")
+    game = Game.new_game("xablau") |> Game.make_move("x")
     assert game.game_state == :good_guess
   end
 
@@ -48,15 +46,16 @@ defmodule Hangman.GameTest do
     game = Game.new_game("xablau")
 
     Enum.reduce(moves, game, fn ({guess, state}, new_game) ->
-      {new_game, _tally} = Game.make_move(new_game, guess)
+      new_game = Game.make_move(new_game, guess)
+
       assert new_game.game_state == state
       new_game
     end)
   end
 
   test "a bad guess is recognized" do
-    game = Game.new_game("xablau")
-    {game, _tally} = Game.make_move(game, "e")
+    game = Game.new_game("xablau") |> Game.make_move("e")
+
     assert game.game_state == :bad_guess
     assert game.turns_left == 6
   end
@@ -75,7 +74,8 @@ defmodule Hangman.GameTest do
     game = Game.new_game("xablau")
 
     Enum.reduce(moves, game, fn ({guess, state, turns}, new_game) ->
-      {new_game, _tally} = Game.make_move(new_game, guess)
+      new_game = Game.make_move(new_game, guess)
+
       assert new_game.game_state == state
       assert new_game.turns_left == turns
       new_game
