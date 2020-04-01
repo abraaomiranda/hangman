@@ -29,4 +29,24 @@ defmodule Hangman.GameTest do
     {game, _tally} = Game.make_move(game, "x")
     assert game.game_state == :already_used
   end
+
+  test "a good guess is recognized" do
+    game = Game.new_game("xablau")
+    {game, _tally} = Game.make_move(game, "x")
+    assert game.game_state == :good_guess
+  end
+
+  test "a won is recognized" do
+    game = Game.new_game("xablau")
+    {game, _tally} = Game.make_move(game, "x")
+    assert game.game_state == :good_guess
+    {game, _tally} = Game.make_move(game, "a")
+    assert game.game_state == :good_guess
+    {game, _tally} = Game.make_move(game, "b")
+    assert game.game_state == :good_guess
+    {game, _tally} = Game.make_move(game, "l")
+    assert game.game_state == :good_guess
+    {game, _tally} = Game.make_move(game, "u")
+    assert game.game_state == :won
+  end
 end
