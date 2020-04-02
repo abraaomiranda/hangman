@@ -3,9 +3,15 @@ defmodule Hangman do
   Documentation for `Hangman`.
   """
 
-  alias Hangman.Game
+  def new_game() do
+    Hangman.Server.start_link()
+  end
 
-  defdelegate new_game(), to: Game
-  defdelegate tally(game), to: Game
-  defdelegate make_move(game, guess), to: Game
+  def tally(game_pid) do
+    GenServer.call(game_pid, {:tally})
+  end
+
+  def make_move(game_pid, guess) do
+    GenServer.call(game_pid, {:make_move, guess})
+  end
 end
